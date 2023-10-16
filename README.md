@@ -1,5 +1,5 @@
 # IETF118-PQ-ECH
-Material for the IETF 118 poject Post-quantum Encrypted Client Hello (PQ-ECH)
+Material for the IETF 118 poject Post-quantum Encrypted Client Hello (PQ-ECH). Find more information in the [documentation](documentation/) folder.
 
 
 ## Vagrant
