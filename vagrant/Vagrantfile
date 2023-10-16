@@ -1,0 +1,44 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  unless Vagrant.has_plugin?("vagrant-reload")
+    raise  Vagrant::Errors::VagrantError.new, "vagrant-reload plugin is missing. Please install it using 'vagrant plugin install vagrant-reload' and rerun 'vagrant up'"
+  end
+
+  config.vm.box = "bento/ubuntu-22.04"
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+  config.vm.hostname = "wolfSSL-PQ"
+
+  config.vm.define "gui", primary: true do |gui|
+    gui.vm.provider "virtualbox" do |v|
+      v.name = "ECH GUI - IETF 118 Hackathon" + Time.now.strftime(" %Y-%m-%d")
+    end
+    gui.vm.provision :reload
+    gui.vm.provision "shell", path: "init-vm.sh"
+    gui.vm.provision "shell", path: "setup-wolfssl.sh"
+    gui.vm.provision "shell", path: "setup-eclipse.sh"
+    gui.vm.provision :reload
+  end
+
+  config.vm.define "cli", autostart: false do |cli|
+    cli.vm.provider "virtualbox" do |v|
+      v.name = "ECH CLI - IETF 118 Hackathon" + Time.now.strftime(" %Y-%m-%d")
+    end
+    cli.vm.provision :reload
+    cli.vm.synced_folder "share/", "/home/vagrant/share"
+    cli.vm.provision "shell", path: "init-vm.sh"
+    cli.vm.provision "shell", path: "setup-wolfssl.sh"
+    cli.vm.provision :reload
+  end
+
+  config.vm.provider "virtualbox" do |v|
+    #v.gui = true
+    v.memory = 8192
+    
+    v.cpus = 2
+    v.customize ["modifyvm", :id, "--vram", "32"]
+    v.customize ['modifyvm', :id, '--nested-hw-virt', 'on']
+    v.customize ['modifyvm', :id, '--pae', 'on']
+  end
+end
