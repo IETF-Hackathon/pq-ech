@@ -50,13 +50,22 @@ For Windows users, you need to download and install VirtualBox from the [Virtual
 
 ## Setup
 
-Now you are ready to use Vagrant to create an isolated environment for developing the wolfSSL code. There are currently two flavors:
+Now you are ready to use Vagrant to create an isolated environment for developing the wolfSSL code. 
+
+Clone (or download) this repository:
+
+```
+git clone https://github.com/IETF-Hackathon/pq-ech.git
+```
+
+There are currently two flavors:
 
 ### Flavor with Desktop GUI: 
 
 To create a complete environment with the Eclipse IDE ready to debug wolfSSL code simply run:
 
 ```
+cd pq-ech/vagrant
 vagrant up
 ```
 
@@ -67,9 +76,26 @@ Build time is around 20-40 minutes depending on your download speed and your sys
 To create just an isolated environment without GUI and with a shared folder that you can edit from your host machine simply run:
 
 ```
+cd pq-ech/vagrant
 vagrant up cli
 ```
 
 Build time is around 10-20 minutes depending on your download speed and your system configuration
 
 ## Post-setup instructions
+
+### Flavor with Desktop GUI: 
+
+1) Open the Virtual Box GUI application
+2) Open the newly created Virtual Machine with everything that you need already installed.
+
+
+### Lightweight flavor with CLI: 
+
+Simply run:
+
+```
+vagrant ssh
+```
+
+The password is `vagrant`.
