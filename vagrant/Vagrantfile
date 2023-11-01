@@ -18,6 +18,7 @@ Vagrant.configure("2") do |config|
     gui.vm.provision "shell", path: "init-vm.sh"
     gui.vm.provision "shell", path: "setup-wolfssl.sh"
     gui.vm.provision "shell", path: "setup-eclipse.sh"
+    gui.vm.provision "shell", path: "git-setup.sh"
     gui.vm.provision :reload
   end
 
@@ -29,6 +30,7 @@ Vagrant.configure("2") do |config|
     cli.vm.synced_folder "share/", "/home/vagrant/share"
     cli.vm.provision "shell", path: "init-vm.sh"
     cli.vm.provision "shell", path: "setup-wolfssl.sh"
+    cli.vm.provision "shell", path: "git-setup.sh"
     cli.vm.provision :reload
   end
 
