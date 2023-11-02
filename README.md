@@ -1,5 +1,7 @@
 # IETF118-PQ-ECH
-Material for the IETF 118 poject Post-quantum Encrypted Client Hello (PQ-ECH). Find more information in the [documentation](documentation/) folder.
+Material for the IETF 118 project Post-quantum Encrypted Client Hello (PQ-ECH). Find more information in the [documentation](documentation/) folder.
+
+For a jumpstart on what to do in the Hackathon see the [roadmap](documentation/roadmap.md).
 
 
 ## Vagrant
@@ -88,14 +90,17 @@ Build time is around 10-20 minutes depending on your download speed and your sys
 
 1) Open the Virtual Box GUI application
 2) Open the newly created Virtual Machine with everything that you need already installed.
+3) Login as user `vagrant` using the password `vagrant`.
+4) Open the Eclipse IDE.
+5) Click `File > Import > C/C++ > Existing Code as Makefile project`
+6) Enter a project name, locate the wolfssl folder and select `Linux GCC` as the toolchain.
+7) You are now ready to edit, build, debug the wolfssl library!
 
 
 ### Lightweight flavor with CLI: 
 
-Simply run:
+1) Run`vagrant ssh` to open an ssh session with the newly created Virtual Machine.
+2) Login as user `vagrant` using the password `vagrant`.
+3) Locate the wolfssl folder.
+4) You are now ready to edit, build and debug the wolfssl library using the terminal! 
 
-```
-vagrant ssh
-```
-
-The password is `vagrant`.
