@@ -93,7 +93,7 @@ Build time is around 10-20 minutes depending on your download speed and your sys
 3) Login as user `vagrant` using the password `vagrant`.
 4) Open the Eclipse IDE.
 5) Click `File > Import > C/C++ > Existing Code as Makefile project`
-6) Enter a project name, locate the wolfssl folder and select `Linux GCC` as the toolchain.
+6) Enter a project name, locate the wolfssl folder (should be in `/home/vagrant/share/wolfssl`) and select `Linux GCC` as the toolchain.
 7) You are now ready to edit, build, debug the wolfssl library!
 
 
