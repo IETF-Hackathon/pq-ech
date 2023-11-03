@@ -23,8 +23,9 @@ sudo make install
 
 #Install wolfssl with oqs
 cd /home/vagrant/share
-git clone https://github.com/wolfSSL/wolfssl.git --depth 10
+git clone https://github.com/wolfSSL/wolfssl.git --depth 50
 cd wolfssl
+git checkout v5.6.4-stable
 ./autogen.sh
 ./configure --enable-ech --enable-debug --disable-shared --disable-static --enable-kyber --disable-tlsv12 --disable-oldtls --with-liboqs
 make -j`nproc`

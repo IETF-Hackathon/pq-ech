@@ -791,17 +791,17 @@ static const bench_pq_alg bench_pq_asym_opt[] = {
 static const bench_pq_alg bench_pq_asym_opt2[] = {
     { "-pq",                 0xffffffff, NULL},
     { "-sphincs_fast_level1", BENCH_SPHINCS_FAST_LEVEL1_SIGN,
-      OQS_SIG_alg_sphincs_shake256_128f_simple },
+      OQS_SIG_alg_sphincs_shake_128f_simple },
     { "-sphincs_fast_level3", BENCH_SPHINCS_FAST_LEVEL3_SIGN,
-      OQS_SIG_alg_sphincs_shake256_192f_simple },
+      OQS_SIG_alg_sphincs_shake_192f_simple },
     { "-sphincs_fast_level5", BENCH_SPHINCS_FAST_LEVEL5_SIGN,
-      OQS_SIG_alg_sphincs_shake256_256f_simple },
+      OQS_SIG_alg_sphincs_shake_256f_simple },
     { "-sphincs_small_level1", BENCH_SPHINCS_SMALL_LEVEL1_SIGN,
-      OQS_SIG_alg_sphincs_shake256_128s_simple },
+      OQS_SIG_alg_sphincs_shake_128s_simple },
     { "-sphincs_small_level3", BENCH_SPHINCS_SMALL_LEVEL3_SIGN,
-      OQS_SIG_alg_sphincs_shake256_192s_simple },
+      OQS_SIG_alg_sphincs_shake_192s_simple },
     { "-sphincs_small_level5", BENCH_SPHINCS_SMALL_LEVEL5_SIGN,
-      OQS_SIG_alg_sphincs_shake256_256s_simple },
+      OQS_SIG_alg_sphincs_shake_256s_simple },
     { NULL, 0, NULL }
 };
 #endif /* HAVE_LIBOQS */
@@ -7635,7 +7635,7 @@ void bench_hpke_exchange(void) {
 	word16 pubKeySz;
 	unsigned int kem, hkdf, aead;
 
-	kem 	= KEM_KYBER512_HKDF_SHA256;
+	kem 	= DHKEM_P256_HKDF_SHA256;
 	hkdf 	= HKDF_SHA256;
 	aead 	= HPKE_AES_128_GCM;
 

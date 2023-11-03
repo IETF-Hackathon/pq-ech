@@ -12,3 +12,4 @@ git clone https://github.com/IETF-Hackathon/pq-ech
 # Copy benchmark files
 cp /home/vagrant/pq-ech/src/benchmark.c /home/vagrant/share/wolfssl/wolfcrypt/benchmark/
 cp /home/vagrant/pq-ech/src/benchmark.h /home/vagrant/share/wolfssl/wolfcrypt/benchmark/
+cp /home/vagrant/pq-ech/src/hpke.h /home/vagrant/share/wolfssl/wolfcrypt/
