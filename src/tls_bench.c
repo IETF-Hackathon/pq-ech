@@ -2316,21 +2316,21 @@ int main()
   WOLFSSL_METHOD* method;
   struct  sockaddr_in servAddr;
   const char message[] =
-	"GET /cdn-cgi/trace/ HTTP/1.1\r\n"
-	"Host: crypto.cloudflare.com\r\n"
-	"User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:105.0) Gecko/20100101 Firefox/105.0\r\n"
-	"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n"
-	"Accept-Language: en-US,en;q=0.5\r\n"
-	"Referer: https://www.google.com/\r\n"
-	"DNT: 1\r\n"
-	"Connection: keep-alive\r\n"
-	"Upgrade-Insecure-Requests: 1\r\n"
-	"Sec-Fetch-Dest: document\r\n"
-	"Sec-Fetch-Mode: navigate\r\n"
-	"Sec-Fetch-Site: cross-site\r\n"
-	"Pragma: no-cache\r\n"
-	"Cache-Control: no-cache\r\n"
-	"\r\n";
+    "GET /cdn-cgi/trace/ HTTP/1.1\r\n"
+    "Host: crypto.cloudflare.com\r\n"
+    "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:105.0) Gecko/20100101 Firefox/105.0\r\n"
+    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n"
+    "Accept-Language: en-US,en;q=0.5\r\n"
+    "Referer: https://www.google.com/\r\n"
+    "DNT: 1\r\n"
+    "Connection: keep-alive\r\n"
+    "Upgrade-Insecure-Requests: 1\r\n"
+    "Sec-Fetch-Dest: document\r\n"
+    "Sec-Fetch-Mode: navigate\r\n"
+    "Sec-Fetch-Site: cross-site\r\n"
+    "Pragma: no-cache\r\n"
+    "Cache-Control: no-cache\r\n"
+    "\r\n";
   const char ip_string[] = "162.159.137.85";
   uint8_t ech_configs[72];
   uint32_t ech_configs_len = 72;
@@ -2338,7 +2338,7 @@ int main()
   /* this first tls connection is only used to get the retry configs */
   /* these configs can also be retrieved from DNS */
 
-  	/* create and set up socket */
+    /* create and set up socket */
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
   memset(&servAddr, 0, sizeof(servAddr));
   servAddr.sin_family = AF_INET;
@@ -2346,16 +2346,16 @@ int main()
   // set the ip string to the cloudflare server
   servAddr.sin_addr.s_addr = inet_addr( ip_string );
 
-  	/* connect to socket */
+    /* connect to socket */
   connect(sockfd, (struct sockaddr *) &servAddr, sizeof(servAddr));
 
-  	/* initialize wolfssl library */
+    /* initialize wolfssl library */
   wolfSSL_Init();
   method = wolfTLSv1_3_client_method(); /* use TLS v1.3 */
 
-  	/* make new ssl context */
+    /* make new ssl context */
   if ( (ctx = wolfSSL_CTX_new(method)) == NULL) {
-    	err_sys("wolfSSL_CTX_new error");
+        err_sys("wolfSSL_CTX_new error");
   }
 
   /* set the server name we want to connect to */
@@ -2366,18 +2366,18 @@ int main()
     err_sys("wolfSSL_CTX_UseSNI error");
   }
 
-  	/* make new wolfSSL struct */
+    /* make new wolfSSL struct */
   if ( (ssl = wolfSSL_new(ctx)) == NULL) {
     err_sys("wolfSSL_new error");
   }
 
-  	/* Add cert to ctx */
+    /* Add cert to ctx */
   if (wolfSSL_CTX_load_verify_locations(ctx, "examples/benchmark/cert.pem", 0) !=
     SSL_SUCCESS) {
-   	err_sys("Error loading ca-cert.pem");
+    err_sys("Error loading ca-cert.pem");
   }
 
-  	/* Connect wolfssl to the socket, server, then send message */
+    /* Connect wolfssl to the socket, server, then send message */
   wolfSSL_set_fd(ssl, sockfd);
 
 
@@ -2386,25 +2386,25 @@ int main()
   ret = wolfSSL_connect(ssl);
 
   if (ret != SSL_SUCCESS) {
-  	printf( "%d %d\n", ret, wolfSSL_get_error( ssl, ret ) );
-   	err_sys("Error wolfSSL_connect");
+    printf( "%d %d\n", ret, wolfSSL_get_error( ssl, ret ) );
+    err_sys("Error wolfSSL_connect");
   }
 
   /* retrieve the retry configs sent by the server */
   ret = wolfSSL_GetEchConfigs(ssl, ech_configs, &ech_configs_len);
 
   if (ret != SSL_SUCCESS) {
-  	printf( "%d %d\n", ret, wolfSSL_get_error( ssl, ret ) );
-   	err_sys("Error wolfSSL_get_ech_configs");
+    printf( "%d %d\n", ret, wolfSSL_get_error( ssl, ret ) );
+    err_sys("Error wolfSSL_get_ech_configs");
   }
 
-  	/* frees all data before client termination */
+    /* frees all data before client termination */
   wolfSSL_free(ssl);
   close(sockfd);
 
   /* now we create a new connection that will send the real ech */
 
-  	/* create and set up socket */
+    /* create and set up socket */
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
   memset(&servAddr, 0, sizeof(servAddr));
   servAddr.sin_family = AF_INET;
@@ -2412,30 +2412,30 @@ int main()
   // set the ip string to the cloudflare server
   servAddr.sin_addr.s_addr = inet_addr( ip_string );
 
-  	/* connect to socket */
+    /* connect to socket */
   connect(sockfd, (struct sockaddr *) &servAddr, sizeof(servAddr));
 
-  	/* make new wolfSSL struct */
+    /* make new wolfSSL struct */
   if ( (ssl = wolfSSL_new(ctx)) == NULL) {
-   	err_sys("wolfSSL_new error");
+    err_sys("wolfSSL_new error");
   }
 
   // set the ech configs taken from dns
   ret = wolfSSL_SetEchConfigs(ssl, ech_configs, ech_configs_len);
 
   if ( ret != WOLFSSL_SUCCESS ) {
-	  err_sys("wolfSSL_set_ech_configs error");
+      err_sys("wolfSSL_set_ech_configs error");
   }
 
-  	/* Connect wolfssl to the socket, server, then send message */
+    /* Connect wolfssl to the socket, server, then send message */
   wolfSSL_set_fd(ssl, sockfd);
 
   /* this connect will send the real ech */
   ret = wolfSSL_connect(ssl);
 
   if (ret != SSL_SUCCESS) {
-  	printf( "%d %d\n", ret, wolfSSL_get_error( ssl, ret ) );
-   	err_sys("Error wolfSSL_connect");
+    printf( "%d %d\n", ret, wolfSSL_get_error( ssl, ret ) );
+    err_sys("Error wolfSSL_connect");
   }
 
   wolfSSL_write(ssl, message, strlen(message));
@@ -2510,71 +2510,71 @@ int main()
 
 
 
-	int ret = 0;
-	byte rd_buf[RDBUFF_LEN];
-	int sockfd = -1;
-	WOLFSSL_CTX* ctx = NULL;
-	WOLFSSL* ssl = NULL;
-	WOLFSSL_METHOD* method;
-	struct  sockaddr_in servAddr;
-	const char message[] =
-		"GET /cdn-cgi/trace/ HTTP/1.1\r\n"
-		"Host: crypto.cloudflare.com\r\n"
-		"User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:105.0) Gecko/20100101 Firefox/105.0\r\n"
-		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n"
-		"Accept-Language: en-US,en;q=0.5\r\n"
-		"Referer: https://www.google.com/\r\n"
-		"DNT: 1\r\n"
-		"Connection: keep-alive\r\n"
-		"Upgrade-Insecure-Requests: 1\r\n"
-		"Sec-Fetch-Dest: document\r\n"
-		"Sec-Fetch-Mode: navigate\r\n"
-		"Sec-Fetch-Site: cross-site\r\n"
-		"Pragma: no-cache\r\n"
-		"Cache-Control: no-cache\r\n"
-		"\r\n";
-	const char ip_string[] = "162.159.138.85";
+    int ret = 0;
+    byte rd_buf[RDBUFF_LEN];
+    int sockfd = -1;
+    WOLFSSL_CTX* ctx = NULL;
+    WOLFSSL* ssl = NULL;
+    WOLFSSL_METHOD* method;
+    struct  sockaddr_in servAddr;
+    const char message[] =
+        "GET /cdn-cgi/trace/ HTTP/1.1\r\n"
+        "Host: crypto.cloudflare.com\r\n"
+        "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:105.0) Gecko/20100101 Firefox/105.0\r\n"
+        "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n"
+        "Accept-Language: en-US,en;q=0.5\r\n"
+        "Referer: https://www.google.com/\r\n"
+        "DNT: 1\r\n"
+        "Connection: keep-alive\r\n"
+        "Upgrade-Insecure-Requests: 1\r\n"
+        "Sec-Fetch-Dest: document\r\n"
+        "Sec-Fetch-Mode: navigate\r\n"
+        "Sec-Fetch-Site: cross-site\r\n"
+        "Pragma: no-cache\r\n"
+        "Cache-Control: no-cache\r\n"
+        "\r\n";
+    const char ip_string[] = "162.159.138.85";
 //    const char ip_string[] = "54.83.199.30";
-	const char SNI[] = "crypto.cloudflare.com";
+    const char SNI[] = "crypto.cloudflare.com";
 //    const char SNI[] = "whatsmychaincert.com";
-	uint8_t ech_configs[ECHBUFF_LEN];
-	uint32_t ech_configs_len = ECHBUFF_LEN;
+    uint8_t ech_configs[ECHBUFF_LEN];
+    uint32_t ech_configs_len = ECHBUFF_LEN;
 
-	/* Enable debugging messages */
+    /* Enable debugging messages */
 //    wolfSSL_Debugging_ON();
 
-	/* this first tls connection is only used to get the retry configs */
-	/* these configs can also be retrieved from DNS */
+    /* this first tls connection is only used to get the retry configs */
+    /* these configs can also be retrieved from DNS */
 
-	/* create and set up socket */
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	memset(&servAddr, 0, sizeof(servAddr));
-	servAddr.sin_family = AF_INET;
-	servAddr.sin_port = htons(SERV_PORT);
-	/* set the ip string to the cloudflare server */
-	servAddr.sin_addr.s_addr = inet_addr( ip_string );
+    /* create and set up socket */
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    memset(&servAddr, 0, sizeof(servAddr));
+    servAddr.sin_family = AF_INET;
+    servAddr.sin_port = htons(SERV_PORT);
+    /* set the ip string to the cloudflare server */
+    servAddr.sin_addr.s_addr = inet_addr( ip_string );
 
-	/* connect to socket */
-	connect(sockfd, (struct sockaddr *) &servAddr, sizeof(servAddr));
+    /* connect to socket */
+    connect(sockfd, (struct sockaddr *) &servAddr, sizeof(servAddr));
 
-	/* initialize wolfssl library */
-	wolfSSL_Init();
-	method = wolfTLSv1_3_client_method(); /* use TLS v1.3 */
+    /* initialize wolfssl library */
+    wolfSSL_Init();
+    method = wolfTLSv1_3_client_method(); /* use TLS v1.3 */
 
-	/* make new ssl context */
-	if ((ctx = wolfSSL_CTX_new(method)) == NULL) {
-		ret = 1;
-		goto cleanup;
-	}
+    /* make new ssl context */
+    if ((ctx = wolfSSL_CTX_new(method)) == NULL) {
+        ret = 1;
+        goto cleanup;
+    }
 
-	/* set the server name we want to connect to */
-	ret = wolfSSL_CTX_UseSNI( ctx, WOLFSSL_SNI_HOST_NAME,
-		SNI, strlen(SNI) );
+    /* set the server name we want to connect to */
+    ret = wolfSSL_CTX_UseSNI( ctx, WOLFSSL_SNI_HOST_NAME,
+        SNI, strlen(SNI) );
 
-	if (ret != WOLFSSL_SUCCESS) {
-		printf("wolfSSL_CTX_UseSNI error %d", ret);
-		goto ctx_clean;
-	}
+    if (ret != WOLFSSL_SUCCESS) {
+        printf("wolfSSL_CTX_UseSNI error %d", ret);
+        goto ctx_clean;
+    }
 
 //    /* Set which ECC curve to use */
 //    if (wolfSSL_CTX_UseSupportedCurve(ctx, WOLFSSL_ECC_X25519) !=
@@ -2582,127 +2582,127 @@ int main()
 //        err_sys("unable to support X25519");
 //    }
 
-	/* make new wolfSSL struct */
-	if ((ssl = wolfSSL_new(ctx)) == NULL) {
-		printf("wolfSSL_new error");
-		ret = 1;
-		goto ctx_clean;
-	}
+    /* make new wolfSSL struct */
+    if ((ssl = wolfSSL_new(ctx)) == NULL) {
+        printf("wolfSSL_new error");
+        ret = 1;
+        goto ctx_clean;
+    }
 
 
-	/* Add cert to ctx */
-	if ((ret = wolfSSL_CTX_load_verify_locations(ctx, CERT_FILE, 0)) !=
-	  WOLFSSL_SUCCESS) {
-		printf("wolfSSL_CTX_load_verify_locations error %d", ret);
-		goto ssl_clean;
-	}
+    /* Add cert to ctx */
+    if ((ret = wolfSSL_CTX_load_verify_locations(ctx, CERT_FILE, 0)) !=
+      WOLFSSL_SUCCESS) {
+        printf("wolfSSL_CTX_load_verify_locations error %d", ret);
+        goto ssl_clean;
+    }
 
 
    /* Connect wolfssl to the socket, server, then send message */
-	wolfSSL_set_fd(ssl, sockfd);
+    wolfSSL_set_fd(ssl, sockfd);
 
-	/* Check the domain name to see if it matches the certs */
-	ret = wolfSSL_check_domain_name(ssl, SNI);
+    /* Check the domain name to see if it matches the certs */
+    ret = wolfSSL_check_domain_name(ssl, SNI);
 
-	if (ret != WOLFSSL_SUCCESS) {
-		printf("%d %d\n", ret, wolfSSL_get_error(ssl, ret));
-		goto ssl_clean;
-	}
+    if (ret != WOLFSSL_SUCCESS) {
+        printf("%d %d\n", ret, wolfSSL_get_error(ssl, ret));
+        goto ssl_clean;
+    }
 
 //    printf("Sending grease ech and get the retry configs back...\n");
 
-	/* this connect will send a grease ech and get the retry configs back */
-	ret = wolfSSL_connect(ssl);
+    /* this connect will send a grease ech and get the retry configs back */
+    ret = wolfSSL_connect(ssl);
 
-	if (ret != WOLFSSL_SUCCESS) {
-		printf("%d %d\n", ret, wolfSSL_get_error(ssl, ret));
-		goto ssl_clean;
-	}
+    if (ret != WOLFSSL_SUCCESS) {
+        printf("%d %d\n", ret, wolfSSL_get_error(ssl, ret));
+        goto ssl_clean;
+    }
 
 //    printf("Retrieving...");
 
-	/* retrieve the retry configs sent by the server */
-	ret = wolfSSL_GetEchConfigs(ssl, ech_configs, &ech_configs_len);
+    /* retrieve the retry configs sent by the server */
+    ret = wolfSSL_GetEchConfigs(ssl, ech_configs, &ech_configs_len);
 
-	if (ret != WOLFSSL_SUCCESS) {
-		printf("wolfSSL_GetEchConfigs error %d\n", ret);
-		goto ssl_clean;
-	}
+    if (ret != WOLFSSL_SUCCESS) {
+        printf("wolfSSL_GetEchConfigs error %d\n", ret);
+        goto ssl_clean;
+    }
 
-	/* frees all data before client termination */
-	wolfSSL_free(ssl);
+    /* frees all data before client termination */
+    wolfSSL_free(ssl);
 
-	ssl = NULL;
-	sockfd = -1;
+    ssl = NULL;
+    sockfd = -1;
 
-	/* now we create a new connection that will send the real ech */
+    /* now we create a new connection that will send the real ech */
 
-	/* create and set up socket */
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	memset(&servAddr, 0, sizeof(servAddr));
-	servAddr.sin_family = AF_INET;
-	servAddr.sin_port = htons(SERV_PORT);
-	/* set the ip string to the cloudflare server */
-	servAddr.sin_addr.s_addr = inet_addr( ip_string );
+    /* create and set up socket */
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    memset(&servAddr, 0, sizeof(servAddr));
+    servAddr.sin_family = AF_INET;
+    servAddr.sin_port = htons(SERV_PORT);
+    /* set the ip string to the cloudflare server */
+    servAddr.sin_addr.s_addr = inet_addr( ip_string );
 
-	/* connect to socket */
-	connect(sockfd, (struct sockaddr *) &servAddr, sizeof(servAddr));
+    /* connect to socket */
+    connect(sockfd, (struct sockaddr *) &servAddr, sizeof(servAddr));
 
-	/* make new wolfSSL struct */
-	if ( (ssl = wolfSSL_new(ctx)) == NULL) {
-		printf("wolfSSL_new error");
-		ret = 1;
-		goto ctx_clean;
-	}
+    /* make new wolfSSL struct */
+    if ( (ssl = wolfSSL_new(ctx)) == NULL) {
+        printf("wolfSSL_new error");
+        ret = 1;
+        goto ctx_clean;
+    }
 
-	/* set the ech configs taken from dns */
-	ret = wolfSSL_SetEchConfigs(ssl, ech_configs, ech_configs_len);
+    /* set the ech configs taken from dns */
+    ret = wolfSSL_SetEchConfigs(ssl, ech_configs, ech_configs_len);
 
-	if ( ret != WOLFSSL_SUCCESS ) {
-		printf("wolfSSL_SetEchConfigs error %d", ret);
-		goto ssl_clean;
-	}
+    if ( ret != WOLFSSL_SUCCESS ) {
+        printf("wolfSSL_SetEchConfigs error %d", ret);
+        goto ssl_clean;
+    }
 
-	/* Connect wolfssl to the socket, server, then send message */
-	wolfSSL_set_fd(ssl, sockfd);
+    /* Connect wolfssl to the socket, server, then send message */
+    wolfSSL_set_fd(ssl, sockfd);
 
 
-	printf("The real ECH...\n");
-	/* this connect will send the real ech */
-	ret = wolfSSL_connect(ssl);
+    printf("The real ECH...\n");
+    /* this connect will send the real ech */
+    ret = wolfSSL_connect(ssl);
 
-	if (ret != WOLFSSL_SUCCESS) {
-		printf( "%d %d\n", ret, wolfSSL_get_error( ssl, ret ) );
-		goto ssl_clean;
-	}
+    if (ret != WOLFSSL_SUCCESS) {
+        printf( "%d %d\n", ret, wolfSSL_get_error( ssl, ret ) );
+        goto ssl_clean;
+    }
 
-	wolfSSL_write(ssl, message, strlen(message));
+    wolfSSL_write(ssl, message, strlen(message));
 
-	do
-	{
-		ret = wolfSSL_read(ssl, rd_buf, RDBUFF_LEN);
+    do
+    {
+        ret = wolfSSL_read(ssl, rd_buf, RDBUFF_LEN);
 
-		if (ret <= 0)
-			break;
+        if (ret <= 0)
+            break;
 
-		printf("%.*s", ret, rd_buf);
+        printf("%.*s", ret, rd_buf);
 
-	/* read until the chunk size is 0 */
-	} while (rd_buf[0] != '0');
+    /* read until the chunk size is 0 */
+    } while (rd_buf[0] != '0');
 
-	ret = 0;
+    ret = 0;
 
 ssl_clean:
-	wolfSSL_free(ssl);
+    wolfSSL_free(ssl);
 
 
-	close(sockfd);
+    close(sockfd);
 ctx_clean:
-	wolfSSL_CTX_free(ctx);
+    wolfSSL_CTX_free(ctx);
 cleanup:
-	wolfSSL_Cleanup();
+    wolfSSL_Cleanup();
 
-	return ret;
+    return ret;
 
 
 } /* main */
@@ -2745,6 +2745,8 @@ cleanup:
 #include "wolfssl/ssl.h"
 #include "wolfssl/test.h"
 //#include <errno.h>
+#include <wolfssl/wolfcrypt/coding.h>
+
 
 #include <wolfssl/wolfcrypt/hpke.h>
 
@@ -2778,381 +2780,381 @@ static int string_matches(const char* arg, const char* str)
 int main(int argc, char** argv)
 {
 
-	/* ECH client is selected */
-	if (string_matches(argv[1], "-c") && argc == 3) {
-
-
-
-		int                sockfd;
-		struct sockaddr_in servAddr;
-		char               buff[256];
-		size_t             len;
-		int                ret;
-		const char*        privateName = "ech-private-name.com";
-		int                privateNameLen = strlen(privateName);
-
-		/* declare wolfSSL objects */
-		WOLFSSL_CTX* ctx;
-		WOLFSSL*     ssl;
-
-		/* Check for proper calling convention */
-		if (argc != 3) {
-			printf("usage: %s <base64 ech config>\n", argv[0]);
-			return 0;
-		}
-
-		/* Create a socket that uses an internet IPv4 address,
-		 * Sets the socket to be stream based (TCP),
-		 * 0 means choose the default protocol. */
-		if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-			fprintf(stderr, "ERROR: failed to create the socket\n");
-			ret = -1;
-			goto end;
-		}
-
-		/* Initialize the server address struct with zeros */
-		memset(&servAddr, 0, sizeof(servAddr));
-
-		/* Fill in the server address */
-		servAddr.sin_family = AF_INET;             /* using IPv4      */
-		servAddr.sin_port   = htons(DEFAULT_PORT); /* on DEFAULT_PORT */
-
-		/* Get the server IPv4 address from the command line call */
-		if (inet_pton(AF_INET, "31.133.129.6", &servAddr.sin_addr) != 1) {
-			fprintf(stderr, "ERROR: invalid address\n");
-			ret = -1;
-			goto end;
-		}
-
-		/* Connect to the server */
-		if ((ret = connect(sockfd, (struct sockaddr*) &servAddr, sizeof(servAddr)))
-			 == -1) {
-			fprintf(stderr, "ERROR: failed to connect\n");
-			goto end;
-		}
-
-		/*---------------------------------*/
-		/* Start of wolfSSL initialization and configuration */
-		/*---------------------------------*/
-		/* Initialize wolfSSL */
-		if ((ret = wolfSSL_Init()) != WOLFSSL_SUCCESS) {
-			fprintf(stderr, "ERROR: Failed to initialize the library\n");
-			goto socket_cleanup;
-		}
-
-		/* Create and initialize WOLFSSL_CTX */
-		if ((ctx = wolfSSL_CTX_new(wolfTLSv1_3_client_method())) == NULL) {
-			fprintf(stderr, "ERROR: failed to create WOLFSSL_CTX\n");
-			ret = -1;
-			goto socket_cleanup;
-		}
-
-		/* Load client certificates into WOLFSSL_CTX */
-		if ((ret = wolfSSL_CTX_load_verify_locations(ctx, CA_CERT_FILE, NULL))
-			 != SSL_SUCCESS) {
-			fprintf(stderr, "ERROR: failed to load %s, please check the file.\n",
-					CA_CERT_FILE);
-			goto ctx_cleanup;
-		}
-
-		/* Create a WOLFSSL object */
-		if ((ssl = wolfSSL_new(ctx)) == NULL) {
-			fprintf(stderr, "ERROR: failed to create WOLFSSL object\n");
-			ret = -1;
-			goto ctx_cleanup;
-		}
-
-		if (wolfSSL_SetEchConfigsBase64(ssl, argv[2], strlen(argv[2])) !=
-			WOLFSSL_SUCCESS) {
-			fprintf(stderr, "ERROR: Failed to wolfSSL_SetEchConfigsBase64\n");
-			ret = -1;
-			goto cleanup;
-		}
-
-		if (wolfSSL_UseSNI(ssl, WOLFSSL_SNI_HOST_NAME, privateName,
-			privateNameLen) != WOLFSSL_SUCCESS) {
-			fprintf(stderr, "ERROR: Failed to wolfSSL_UseSNI\n");
-			ret = -1;
-			goto cleanup;
-		}
-
-		/* Attach wolfSSL to the socket */
-		if ((ret = wolfSSL_set_fd(ssl, sockfd)) != WOLFSSL_SUCCESS) {
-			fprintf(stderr, "ERROR: Failed to set the file descriptor\n");
-			goto cleanup;
-		}
-
-		/* Connect to wolfSSL on the server side */
-		if ((ret = wolfSSL_connect(ssl)) != SSL_SUCCESS) {
-			fprintf(stderr, "ERROR: failed to connect to wolfSSL\n");
-			goto cleanup;
-		}
-
-		/* Get a message for the server from stdin */
-		printf("Message for server: ");
-		memset(buff, 0, sizeof(buff));
-		if (fgets(buff, sizeof(buff), stdin) == NULL) {
-			fprintf(stderr, "ERROR: failed to get message for server\n");
-			ret = -1;
-			goto cleanup;
-		}
-		len = strnlen(buff, sizeof(buff));
-
-		/* Send the message to the server */
-		if ((ret = wolfSSL_write(ssl, buff, len)) != len) {
-			fprintf(stderr, "ERROR: failed to write entire message\n");
-			fprintf(stderr, "%d bytes of %d bytes were sent", ret, (int) len);
-			goto cleanup;
-		}
-
-		/* Read the server data into our buff array */
-		memset(buff, 0, sizeof(buff));
-		if ((ret = wolfSSL_read(ssl, buff, sizeof(buff)-1)) == -1) {
-			fprintf(stderr, "ERROR: failed to read\n");
-			goto cleanup;
-		}
-
-		/* Print to stdout any data the server sends */
-		printf("Server: %s\n", buff);
-
-		/* Bidirectional shutdown */
-		while (wolfSSL_shutdown(ssl) == SSL_SHUTDOWN_NOT_DONE) {
-			printf("Shutdown not complete\n");
-		}
-
-		printf("Shutdown complete\n");
-
-		ret = 0;
-
-		/* Cleanup and return */
-	cleanup:
-		wolfSSL_free(ssl);      /* Free the wolfSSL object                  */
-	ctx_cleanup:
-		wolfSSL_CTX_free(ctx);  /* Free the wolfSSL context object          */
-		wolfSSL_Cleanup();      /* Cleanup the wolfSSL environment          */
-	socket_cleanup:
-		close(sockfd);          /* Close the connection to the server       */
-	end:
-		return ret;               /* Return reporting a success               */
-
-
-	} /* ECH client is selected */
-
-
-	/* ECH server is selected */
-	else if (string_matches(argv[1], "-s") && argc == 2) {
-
-
-		int                sockfd = SOCKET_INVALID;
-		int                connd = SOCKET_INVALID;
-		struct sockaddr_in servAddr;
-		struct sockaddr_in clientAddr;
-		socklen_t          size = sizeof(clientAddr);
-		char               buff[256];
-		size_t             len;
-		int                shutdown = 0;
-		int                ret;
-		const char*        reply = "I hear ya fa shizzle!\n";
-		const char*        publicName = "ech-public-name.com";
-		const char*        privateName = "ech-private-name.com";
-		int                privateNameLen = strlen(privateName);
-		byte               echConfig[4096];
-		word32             echConfigLen = 4096;
-		char               echConfigBase64[4096];
-		word32             echConfigBase64Len = 4096;
-
-		/* declare wolfSSL objects */
-		WOLFSSL_CTX* ctx = NULL;
-		WOLFSSL*     ssl = NULL;
-
-		/* Initialize wolfSSL */
-		wolfSSL_Init();
-
-		/* Create a socket that uses an internet IPv4 address,
-		 * Sets the socket to be stream based (TCP),
-		 * 0 means choose the default protocol. */
-		if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-			fprintf(stderr, "ERROR: failed to create the socket\n");
-			ret = -1;
-			goto exit;
-		}
-
-		/* Create and initialize WOLFSSL_CTX */
-		if ((ctx = wolfSSL_CTX_new(wolfTLSv1_3_server_method())) == NULL) {
-			fprintf(stderr, "ERROR: failed to create WOLFSSL_CTX\n");
-			ret = -1;
-			goto exit;
-		}
-
-		/* Generate ech config */
-		if (wolfSSL_CTX_GenerateEchConfig(ctx, publicName, KEM_KYBER512_HKDF_SHA256, 0, 0)
-			!= WOLFSSL_SUCCESS) {
-			fprintf(stderr, "ERROR: failed to wolfSSL_CTX_GenerateEchConfig\n");
-			ret = -1;
-			goto exit;
-		}
-
-		if(wolfSSL_CTX_GetEchConfigs(ctx, echConfig, &echConfigLen) !=
-			WOLFSSL_SUCCESS) {
-			fprintf(stderr, "ERROR: failed to wolfSSL_CTX_GetEchConfigs\n");
-			ret = -1;
-			goto exit;
-		}
-
-		if (Base64_Encode_NoNl(echConfig, echConfigLen, (byte*)echConfigBase64,
-			&echConfigBase64Len) != 0) {
-			fprintf(stderr, "ERROR: failed to Base64_Encode_NoNl\n");
-			ret = -1;
-			goto exit;
-		}
-
-		fprintf(stdout, "ECH config: \n%s\n", echConfigBase64);
-
-		if(wolfSSL_CTX_UseSNI(ctx, WOLFSSL_SNI_HOST_NAME, privateName,
-			privateNameLen) != WOLFSSL_SUCCESS) {
-			fprintf(stderr,
-				"ERROR: failed to wolfSSL_CTX_UseSNIwolfSSL_CTX_UseSNI\n");
-			ret = -1;
-			goto exit;
-		}
-
-		/* Load server certificates into WOLFSSL_CTX */
-		if ((ret = wolfSSL_CTX_use_certificate_file(ctx, SERVER_CERT_FILE, SSL_FILETYPE_PEM))
-			!= WOLFSSL_SUCCESS) {
-			fprintf(stderr, "ERROR: failed to load %s, please check the file.\n",
-					SERVER_CERT_FILE);
-			goto exit;
-		}
-
-		/* Load server key into WOLFSSL_CTX */
-		if ((ret = wolfSSL_CTX_use_PrivateKey_file(ctx, KEY_FILE, SSL_FILETYPE_PEM))
-			!= WOLFSSL_SUCCESS) {
-			fprintf(stderr, "ERROR: failed to load %s, please check the file.\n",
-					KEY_FILE);
-			goto exit;
-		}
-
-		/* Initialize the server address struct with zeros */
-		memset(&servAddr, 0, sizeof(servAddr));
-
-		/* Fill in the server address */
-		servAddr.sin_family      = AF_INET;             /* using IPv4      */
-		servAddr.sin_port        = htons(DEFAULT_PORT); /* on DEFAULT_PORT */
-		servAddr.sin_addr.s_addr = INADDR_ANY;          /* from anywhere   */
-
-		/* Bind the server socket to our port */
-		if (bind(sockfd, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1) {
-			fprintf(stderr, "ERROR: failed to bind\n");
-			ret = -1;
-			goto exit;
-		}
-
-		/* Listen for a new connection, allow 5 pending connections */
-		if (listen(sockfd, 5) == -1) {
-			fprintf(stderr, "ERROR: failed to listen\n");
-			ret = -1;
-			goto exit;
-		}
-
-		/* Continue to accept clients until shutdown is issued */
-		while (!shutdown) {
-			printf("Waiting for a connection...\n");
-
-			/* Accept client connections */
-			if ((connd = accept(sockfd, (struct sockaddr*)&clientAddr, &size))
-				== -1) {
-				fprintf(stderr, "ERROR: failed to accept the connection\n\n");
-				ret = -1;
-				goto exit;
-			}
-
-			/* Create a WOLFSSL object */
-			if ((ssl = wolfSSL_new(ctx)) == NULL) {
-				fprintf(stderr, "ERROR: failed to create WOLFSSL object\n");
-				ret = -1;
-				goto exit;
-			}
-
-			/* Attach wolfSSL to the socket */
-			wolfSSL_set_fd(ssl, connd);
-
-			/* Establish TLS connection */
-			ret = wolfSSL_accept(ssl);
-			if (ret != WOLFSSL_SUCCESS) {
-				fprintf(stderr, "wolfSSL_accept error = %d\n",
-					wolfSSL_get_error(ssl, ret));
-				goto exit;
-			}
-
-			printf("Client connected successfully\n");
-
-			/* Read the client data into our buff array */
-			memset(buff, 0, sizeof(buff));
-			if ((ret = wolfSSL_read(ssl, buff, sizeof(buff)-1)) == -1) {
-				fprintf(stderr, "ERROR: failed to read\n");
-				goto exit;
-			}
-
-			/* Print to stdout any data the client sends */
-			printf("Client: %s\n", buff);
-
-			/* Check for server shutdown command */
-			if (strncmp(buff, "shutdown", 8) == 0) {
-				printf("Shutdown command issued!\n");
-				shutdown = 1;
-			}
-
-			/* Write our reply into buff */
-			memset(buff, 0, sizeof(buff));
-			memcpy(buff, reply, strlen(reply));
-			len = strnlen(buff, sizeof(buff));
-
-			/* Reply back to the client */
-			if ((ret = wolfSSL_write(ssl, buff, len)) != len) {
-				fprintf(stderr, "ERROR: failed to write\n");
-				goto exit;
-			}
-
-			/* Notify the client that the connection is ending */
-			wolfSSL_shutdown(ssl);
-			printf("Shutdown complete\n");
-
-			/* Cleanup after this connection */
-			wolfSSL_free(ssl);      /* Free the wolfSSL object              */
-			ssl = NULL;
-			close(connd);           /* Close the connection to the client   */
-		}
-
-		ret = 0;
-
-	exit:
-		/* Cleanup and return */
-		if (ssl)
-			wolfSSL_free(ssl);      /* Free the wolfSSL object              */
-		if (connd != SOCKET_INVALID)
-			close(connd);           /* Close the connection to the client   */
-		if (sockfd != SOCKET_INVALID)
-			close(sockfd);          /* Close the socket listening for clients   */
-		if (ctx)
-			wolfSSL_CTX_free(ctx);  /* Free the wolfSSL context object          */
-		wolfSSL_Cleanup();          /* Cleanup the wolfSSL environment          */
-
-		return ret;               /* Return reporting a success               */
-
-
-
-
-
-
-
-
-
-
-	} /* ECH server is selected */
-
-	else {
-		printf("This is not a valid option. Please select '-c' or '-s' for ECH client or server respectively.\n");
-	}
+    /* ECH client is selected */
+    if (string_matches(argv[1], "-c") && argc == 3) {
+
+
+
+        int                sockfd;
+        struct sockaddr_in servAddr;
+        char               buff[256];
+        size_t             len;
+        int                ret;
+        const char*        privateName = "ech-private-name.com";
+        int                privateNameLen = strlen(privateName);
+
+        /* declare wolfSSL objects */
+        WOLFSSL_CTX* ctx;
+        WOLFSSL*     ssl;
+
+        /* Check for proper calling convention */
+        if (argc != 3) {
+            printf("usage: %s <base64 ech config>\n", argv[0]);
+            return 0;
+        }
+
+        /* Create a socket that uses an internet IPv4 address,
+         * Sets the socket to be stream based (TCP),
+         * 0 means choose the default protocol. */
+        if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+            fprintf(stderr, "ERROR: failed to create the socket\n");
+            ret = -1;
+            goto end;
+        }
+
+        /* Initialize the server address struct with zeros */
+        memset(&servAddr, 0, sizeof(servAddr));
+
+        /* Fill in the server address */
+        servAddr.sin_family = AF_INET;             /* using IPv4      */
+        servAddr.sin_port   = htons(DEFAULT_PORT); /* on DEFAULT_PORT */
+
+        /* Get the server IPv4 address from the command line call */
+        if (inet_pton(AF_INET, "31.133.129.6", &servAddr.sin_addr) != 1) {
+            fprintf(stderr, "ERROR: invalid address\n");
+            ret = -1;
+            goto end;
+        }
+
+        /* Connect to the server */
+        if ((ret = connect(sockfd, (struct sockaddr*) &servAddr, sizeof(servAddr)))
+             == -1) {
+            fprintf(stderr, "ERROR: failed to connect\n");
+            goto end;
+        }
+
+        /*---------------------------------*/
+        /* Start of wolfSSL initialization and configuration */
+        /*---------------------------------*/
+        /* Initialize wolfSSL */
+        if ((ret = wolfSSL_Init()) != WOLFSSL_SUCCESS) {
+            fprintf(stderr, "ERROR: Failed to initialize the library\n");
+            goto socket_cleanup;
+        }
+
+        /* Create and initialize WOLFSSL_CTX */
+        if ((ctx = wolfSSL_CTX_new(wolfTLSv1_3_client_method())) == NULL) {
+            fprintf(stderr, "ERROR: failed to create WOLFSSL_CTX\n");
+            ret = -1;
+            goto socket_cleanup;
+        }
+
+        /* Load client certificates into WOLFSSL_CTX */
+        if ((ret = wolfSSL_CTX_load_verify_locations(ctx, CA_CERT_FILE, NULL))
+             != SSL_SUCCESS) {
+            fprintf(stderr, "ERROR: failed to load %s, please check the file.\n",
+                    CA_CERT_FILE);
+            goto ctx_cleanup;
+        }
+
+        /* Create a WOLFSSL object */
+        if ((ssl = wolfSSL_new(ctx)) == NULL) {
+            fprintf(stderr, "ERROR: failed to create WOLFSSL object\n");
+            ret = -1;
+            goto ctx_cleanup;
+        }
+
+        if (wolfSSL_SetEchConfigsBase64(ssl, argv[2], strlen(argv[2])) !=
+            WOLFSSL_SUCCESS) {
+            fprintf(stderr, "ERROR: Failed to wolfSSL_SetEchConfigsBase64\n");
+            ret = -1;
+            goto cleanup;
+        }
+
+        if (wolfSSL_UseSNI(ssl, WOLFSSL_SNI_HOST_NAME, privateName,
+            privateNameLen) != WOLFSSL_SUCCESS) {
+            fprintf(stderr, "ERROR: Failed to wolfSSL_UseSNI\n");
+            ret = -1;
+            goto cleanup;
+        }
+
+        /* Attach wolfSSL to the socket */
+        if ((ret = wolfSSL_set_fd(ssl, sockfd)) != WOLFSSL_SUCCESS) {
+            fprintf(stderr, "ERROR: Failed to set the file descriptor\n");
+            goto cleanup;
+        }
+
+        /* Connect to wolfSSL on the server side */
+        if ((ret = wolfSSL_connect(ssl)) != SSL_SUCCESS) {
+            fprintf(stderr, "ERROR: failed to connect to wolfSSL\n");
+            goto cleanup;
+        }
+
+        /* Get a message for the server from stdin */
+        printf("Message for server: ");
+        memset(buff, 0, sizeof(buff));
+        if (fgets(buff, sizeof(buff), stdin) == NULL) {
+            fprintf(stderr, "ERROR: failed to get message for server\n");
+            ret = -1;
+            goto cleanup;
+        }
+        len = strnlen(buff, sizeof(buff));
+
+        /* Send the message to the server */
+        if ((ret = wolfSSL_write(ssl, buff, len)) != (int) len) {
+            fprintf(stderr, "ERROR: failed to write entire message\n");
+            fprintf(stderr, "%d bytes of %d bytes were sent", ret, (int) len);
+            goto cleanup;
+        }
+
+        /* Read the server data into our buff array */
+        memset(buff, 0, sizeof(buff));
+        if ((ret = wolfSSL_read(ssl, buff, sizeof(buff)-1)) == -1) {
+            fprintf(stderr, "ERROR: failed to read\n");
+            goto cleanup;
+        }
+
+        /* Print to stdout any data the server sends */
+        printf("Server: %s\n", buff);
+
+        /* Bidirectional shutdown */
+        while (wolfSSL_shutdown(ssl) == SSL_SHUTDOWN_NOT_DONE) {
+            printf("Shutdown not complete\n");
+        }
+
+        printf("Shutdown complete\n");
+
+        ret = 0;
+
+        /* Cleanup and return */
+    cleanup:
+        wolfSSL_free(ssl);      /* Free the wolfSSL object                  */
+    ctx_cleanup:
+        wolfSSL_CTX_free(ctx);  /* Free the wolfSSL context object          */
+        wolfSSL_Cleanup();      /* Cleanup the wolfSSL environment          */
+    socket_cleanup:
+        close(sockfd);          /* Close the connection to the server       */
+    end:
+        return ret;               /* Return reporting a success               */
+
+
+    } /* ECH client is selected */
+
+
+    /* ECH server is selected */
+    else if (string_matches(argv[1], "-s") && argc == 2) {
+
+
+        int                sockfd = SOCKET_INVALID;
+        int                connd = SOCKET_INVALID;
+        struct sockaddr_in servAddr;
+        struct sockaddr_in clientAddr;
+        socklen_t          size = sizeof(clientAddr);
+        char               buff[256];
+        size_t             len;
+        int                shutdown = 0;
+        int                ret;
+        const char*        reply = "I hear ya fa shizzle!\n";
+        const char*        publicName = "ech-public-name.com";
+        const char*        privateName = "ech-private-name.com";
+        int                privateNameLen = strlen(privateName);
+        byte               echConfig[4096];
+        word32             echConfigLen = 4096;
+        char               echConfigBase64[4096];
+        word32             echConfigBase64Len = 4096;
+
+        /* declare wolfSSL objects */
+        WOLFSSL_CTX* ctx = NULL;
+        WOLFSSL*     ssl = NULL;
+
+        /* Initialize wolfSSL */
+        wolfSSL_Init();
+
+        /* Create a socket that uses an internet IPv4 address,
+         * Sets the socket to be stream based (TCP),
+         * 0 means choose the default protocol. */
+        if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+            fprintf(stderr, "ERROR: failed to create the socket\n");
+            ret = -1;
+            goto exit;
+        }
+
+        /* Create and initialize WOLFSSL_CTX */
+        if ((ctx = wolfSSL_CTX_new(wolfTLSv1_3_server_method())) == NULL) {
+            fprintf(stderr, "ERROR: failed to create WOLFSSL_CTX\n");
+            ret = -1;
+            goto exit;
+        }
+
+        /* Generate ech config */
+        if (wolfSSL_CTX_GenerateEchConfig(ctx, publicName, KEM_KYBER512_HKDF_SHA256, 0, 0)
+            != WOLFSSL_SUCCESS) {
+            fprintf(stderr, "ERROR: failed to wolfSSL_CTX_GenerateEchConfig\n");
+            ret = -1;
+            goto exit;
+        }
+
+        if(wolfSSL_CTX_GetEchConfigs(ctx, echConfig, &echConfigLen) !=
+            WOLFSSL_SUCCESS) {
+            fprintf(stderr, "ERROR: failed to wolfSSL_CTX_GetEchConfigs\n");
+            ret = -1;
+            goto exit;
+        }
+
+        if (Base64_Encode_NoNl(echConfig, echConfigLen, (byte*)echConfigBase64,
+            &echConfigBase64Len) != 0) {
+            fprintf(stderr, "ERROR: failed to Base64_Encode_NoNl\n");
+            ret = -1;
+            goto exit;
+        }
+
+        fprintf(stdout, "ECH config: \n%s\n", echConfigBase64);
+
+        if(wolfSSL_CTX_UseSNI(ctx, WOLFSSL_SNI_HOST_NAME, privateName,
+            privateNameLen) != WOLFSSL_SUCCESS) {
+            fprintf(stderr,
+                "ERROR: failed to wolfSSL_CTX_UseSNIwolfSSL_CTX_UseSNI\n");
+            ret = -1;
+            goto exit;
+        }
+
+        /* Load server certificates into WOLFSSL_CTX */
+        if ((ret = wolfSSL_CTX_use_certificate_file(ctx, SERVER_CERT_FILE, SSL_FILETYPE_PEM))
+            != WOLFSSL_SUCCESS) {
+            fprintf(stderr, "ERROR: failed to load %s, please check the file.\n",
+                    SERVER_CERT_FILE);
+            goto exit;
+        }
+
+        /* Load server key into WOLFSSL_CTX */
+        if ((ret = wolfSSL_CTX_use_PrivateKey_file(ctx, KEY_FILE, SSL_FILETYPE_PEM))
+            != WOLFSSL_SUCCESS) {
+            fprintf(stderr, "ERROR: failed to load %s, please check the file.\n",
+                    KEY_FILE);
+            goto exit;
+        }
+
+        /* Initialize the server address struct with zeros */
+        memset(&servAddr, 0, sizeof(servAddr));
+
+        /* Fill in the server address */
+        servAddr.sin_family      = AF_INET;             /* using IPv4      */
+        servAddr.sin_port        = htons(DEFAULT_PORT); /* on DEFAULT_PORT */
+        servAddr.sin_addr.s_addr = INADDR_ANY;          /* from anywhere   */
+
+        /* Bind the server socket to our port */
+        if (bind(sockfd, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1) {
+            fprintf(stderr, "ERROR: failed to bind\n");
+            ret = -1;
+            goto exit;
+        }
+
+        /* Listen for a new connection, allow 5 pending connections */
+        if (listen(sockfd, 5) == -1) {
+            fprintf(stderr, "ERROR: failed to listen\n");
+            ret = -1;
+            goto exit;
+        }
+
+        /* Continue to accept clients until shutdown is issued */
+        while (!shutdown) {
+            printf("Waiting for a connection...\n");
+
+            /* Accept client connections */
+            if ((connd = accept(sockfd, (struct sockaddr*)&clientAddr, &size))
+                == -1) {
+                fprintf(stderr, "ERROR: failed to accept the connection\n\n");
+                ret = -1;
+                goto exit;
+            }
+
+            /* Create a WOLFSSL object */
+            if ((ssl = wolfSSL_new(ctx)) == NULL) {
+                fprintf(stderr, "ERROR: failed to create WOLFSSL object\n");
+                ret = -1;
+                goto exit;
+            }
+
+            /* Attach wolfSSL to the socket */
+            wolfSSL_set_fd(ssl, connd);
+
+            /* Establish TLS connection */
+            ret = wolfSSL_accept(ssl);
+            if (ret != WOLFSSL_SUCCESS) {
+                fprintf(stderr, "wolfSSL_accept error = %d\n",
+                    wolfSSL_get_error(ssl, ret));
+                goto exit;
+            }
+
+            printf("Client connected successfully\n");
+
+            /* Read the client data into our buff array */
+            memset(buff, 0, sizeof(buff));
+            if ((ret = wolfSSL_read(ssl, buff, sizeof(buff)-1)) == -1) {
+                fprintf(stderr, "ERROR: failed to read\n");
+                goto exit;
+            }
+
+            /* Print to stdout any data the client sends */
+            printf("Client: %s\n", buff);
+
+            /* Check for server shutdown command */
+            if (strncmp(buff, "shutdown", 8) == 0) {
+                printf("Shutdown command issued!\n");
+                shutdown = 1;
+            }
+
+            /* Write our reply into buff */
+            memset(buff, 0, sizeof(buff));
+            memcpy(buff, reply, strlen(reply));
+            len = strnlen(buff, sizeof(buff));
+
+            /* Reply back to the client */
+            if ((ret = wolfSSL_write(ssl, buff, len)) != (int) len) {
+                fprintf(stderr, "ERROR: failed to write\n");
+                goto exit;
+            }
+
+            /* Notify the client that the connection is ending */
+            wolfSSL_shutdown(ssl);
+            printf("Shutdown complete\n");
+
+            /* Cleanup after this connection */
+            wolfSSL_free(ssl);      /* Free the wolfSSL object              */
+            ssl = NULL;
+            close(connd);           /* Close the connection to the client   */
+        }
+
+        ret = 0;
+
+    exit:
+        /* Cleanup and return */
+        if (ssl)
+            wolfSSL_free(ssl);      /* Free the wolfSSL object              */
+        if (connd != SOCKET_INVALID)
+            close(connd);           /* Close the connection to the client   */
+        if (sockfd != SOCKET_INVALID)
+            close(sockfd);          /* Close the socket listening for clients   */
+        if (ctx)
+            wolfSSL_CTX_free(ctx);  /* Free the wolfSSL context object          */
+        wolfSSL_Cleanup();          /* Cleanup the wolfSSL environment          */
+
+        return ret;               /* Return reporting a success               */
+
+
+
+
+
+
+
+
+
+
+    } /* ECH server is selected */
+
+    else {
+        printf("This is not a valid option. Please select '-c' or '-s' for ECH client or server respectively.\n");
+    }
 
 
 } /* main */
